@@ -81,6 +81,116 @@ button{
   50%      { margin-left: 40px; }
 }
 
+/* ---------------------------------------------------------- puerta de acceso */
+.gate{
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: radial-gradient(ellipse at 50% 0%, #fffaf0 0%, var(--bg) 55%, var(--bg-soft) 100%);
+  transition: opacity .8s ease, transform .8s ease, visibility .8s;
+}
+.gate.leaving{
+  opacity: 0;
+  transform: scale(1.06);
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.gate-card{
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: .85rem;
+  padding: 2.4rem 2rem;
+  border-radius: 22px;
+  background: rgba(255, 253, 246, .6);
+  border: 1px solid rgba(244, 180, 0, .3);
+  box-shadow: 0 30px 60px -25px var(--shadow);
+}
+.gate-card.shake{
+  animation: shake .5s ease;
+}
+
+.gate-flower{
+  font-size: 2.6rem;
+  line-height: 1;
+  filter: drop-shadow(0 4px 10px rgba(244,180,0,.35));
+}
+
+.gate-title{
+  margin: 0;
+  font-family: "Playfair Display", serif;
+  font-weight: 600;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.gate-hint{
+  margin: 0;
+  font-style: italic;
+  color: var(--ink-soft);
+  font-size: 1rem;
+}
+
+.gate-input{
+  width: 100%;
+  margin-top: .4rem;
+  padding: .65rem .3rem;
+  border: none;
+  border-bottom: 2px solid rgba(43,32,19,.25);
+  background: transparent;
+  text-align: center;
+  font-family: "Playfair Display", serif;
+  font-size: 1.15rem;
+  color: var(--ink);
+  transition: border-color .3s ease;
+}
+.gate-input:focus{
+  outline: none;
+  border-bottom-color: var(--gold-deep);
+}
+.gate-input::placeholder{
+  color: var(--ink-soft);
+  opacity: .55;
+  font-style: italic;
+}
+
+.gate-submit{
+  margin-top: .3rem;
+  padding: .6rem 1.6rem;
+  border-radius: 999px;
+  background: var(--gold);
+  color: var(--ink);
+  font-family: "Playfair Display", serif;
+  font-weight: 600;
+  font-size: .95rem;
+  transition: background .2s ease, transform .2s ease;
+}
+.gate-submit:hover{ background: var(--gold-deep); }
+.gate-submit:active{ transform: scale(.97); }
+
+.gate-error{
+  min-height: 1.3em;
+  margin: 0;
+  font-size: .88rem;
+  color: #a3441b;
+}
+
+@keyframes shake{
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-8px); }
+  40%      { transform: translateX(7px); }
+  60%      { transform: translateX(-5px); }
+  80%      { transform: translateX(4px); }
+}
+
 /* ---------------------------------------------------------- intro screen */
 .intro{
   position: fixed;
@@ -224,11 +334,13 @@ button{
   stroke-linecap: round;
   stroke-dasharray: var(--len);
   stroke-dashoffset: var(--len);
-  transition: stroke-dashoffset 1s ease-out;
+  transform: scale(.35) rotate(-14deg);
+  transition: stroke-dashoffset 1.1s ease-out, transform 1s cubic-bezier(.3,1.4,.5,1);
   transition-delay: var(--delay, 0s);
 }
 .branch.drawn{
   stroke-dashoffset: 0;
+  transform: scale(1) rotate(0deg);
 }
 
 .heart-flower{
@@ -324,13 +436,12 @@ button{
 
 /* ---------------------------------------------------------- music box */
 .music-box{
-  display: inline-flex;
-  align-items: center;
-  gap: .7rem;
-  padding: .55rem 1rem .55rem .6rem;
-  border-radius: 999px;
-  background: rgba(244,180,0,.12);
-  border: 1px solid rgba(244,180,0,.35);
+  width: 100%;
+  max-width: 340px;
+  padding: .8rem .9rem;
+  border-radius: 18px;
+  background: rgba(244,180,0,.1);
+  border: 1px solid rgba(244,180,0,.3);
   opacity: 0;
   transform: translateY(6px);
   transition: opacity .6s ease, transform .6s ease;
@@ -340,54 +451,22 @@ button{
   transform: translateY(0);
 }
 
-.music-toggle{
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: var(--gold);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: none;
-}
-
-.bars{
-  display: flex;
-  align-items: flex-end;
-  gap: 2px;
-  height: 14px;
-}
-.bars i{
-  display: block;
-  width: 3px;
-  background: var(--ink);
-  border-radius: 1px;
-  animation: eq 1s ease-in-out infinite;
-}
-.bars i:nth-child(1){ height: 40%; animation-delay: 0s; }
-.bars i:nth-child(2){ height: 100%; animation-delay: .15s; }
-.bars i:nth-child(3){ height: 60%; animation-delay: .3s; }
-.bars i:nth-child(4){ height: 80%; animation-delay: .45s; }
-
-.music-box.paused .bars i{ animation-play-state: paused; height: 30% !important; }
-
-@keyframes eq{
-  0%, 100%{ transform: scaleY(.4); }
-  50%{ transform: scaleY(1); }
-}
-
-.music-meta{
-  display: flex;
-  flex-direction: column;
-  line-height: 1.25;
-}
-.music-title{
+.music-label{
+  margin: 0 0 .5rem;
   font-family: "Playfair Display", serif;
-  font-size: .9rem;
-}
-.music-artist{
-  font-size: .78rem;
+  font-size: .85rem;
+  letter-spacing: .03em;
   color: var(--ink-soft);
+}
+
+.spotify-embed{
+  border-radius: 12px;
+  overflow: hidden;
+  line-height: 0;
+}
+.spotify-embed iframe{
+  display: block;
+  border-radius: 12px;
 }
 
 /* ---------------------------------------------------------- replay */
@@ -423,8 +502,8 @@ button{
 }
 
 @media (prefers-reduced-motion: reduce){
-  .petal, .intro-flower, .bars i{ animation: none !important; }
-  .trunk-path, .branch, .heart-flower, .text-panel, .music-box, .replay-btn{
+  .petal, .intro-flower{ animation: none !important; }
+  .trunk-path, .branch, .heart-flower, .text-panel, .music-box, .replay-btn, .gate, .gate-card{
     transition-duration: .01ms !important;
   }
 }
