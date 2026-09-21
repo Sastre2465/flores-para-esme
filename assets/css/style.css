@@ -1,0 +1,430 @@
+/* ============================================================
+   Para Esme — jardín de flores amarillas
+   ============================================================ */
+
+:root{
+  --bg:        #faf4e6;
+  --bg-soft:   #f3e9d2;
+  --ink:       #2b2013;
+  --ink-soft:  #5c4d38;
+  --gold:      #f4b400;
+  --gold-deep: #d98c0b;
+  --gold-pale: #ffd766;
+  --center:    #6b3f1d;
+  --trunk:     #24493b;
+  --trunk-lt:  #35604f;
+  --line:      #2b2013;
+  --shadow:    rgba(43, 32, 19, .18);
+
+  color-scheme: light;
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+}
+
+*{ box-sizing: border-box; }
+
+html, body{
+  height: 100%;
+  margin: 0;
+}
+
+body{
+  background: radial-gradient(ellipse at 50% 0%, #fffaf0 0%, var(--bg) 55%, var(--bg-soft) 100%);
+  color: var(--ink);
+  font-family: "Cormorant Garamond", "Playfair Display", Georgia, serif;
+  overflow-x: hidden;
+  padding-top: var(--safe-t);
+  padding-bottom: var(--safe-b);
+}
+
+img{ max-width: 100%; }
+[hidden]{ display: none !important; }
+
+button{
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+}
+
+/* ---------------------------------------------------------- petals (background, always falling) */
+.petal-field{
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 5;
+}
+
+.petal{
+  position: absolute;
+  top: -5vh;
+  width: var(--size, 14px);
+  height: var(--size, 14px);
+  background: radial-gradient(circle at 30% 30%, var(--gold-pale), var(--gold) 60%, var(--gold-deep) 100%);
+  border-radius: 0 60% 0 60%;
+  opacity: .85;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,.12));
+  animation: fall linear infinite, sway ease-in-out infinite;
+  animation-duration: var(--fall-dur, 12s), var(--sway-dur, 4s);
+  animation-delay: var(--delay, 0s), var(--delay, 0s);
+  left: var(--x, 50%);
+}
+
+@keyframes fall{
+  0%   { transform: translateY(-10vh) rotate(0deg); }
+  100% { transform: translateY(115vh) rotate(340deg); }
+}
+@keyframes sway{
+  0%, 100% { margin-left: 0; }
+  50%      { margin-left: 40px; }
+}
+
+/* ---------------------------------------------------------- intro screen */
+.intro{
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.4rem;
+  text-align: center;
+  padding: 1.5rem;
+  transition: opacity .9s ease, transform .9s ease, visibility .9s;
+}
+
+.intro.leaving{
+  opacity: 0;
+  transform: scale(1.08);
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.intro-flower-wrap{
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+}
+
+.intro-flower{
+  width: clamp(110px, 22vw, 170px);
+  height: clamp(110px, 22vw, 170px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulse-glow 2.6s ease-in-out infinite;
+  outline-offset: 6px;
+}
+
+.intro-flower:focus-visible{
+  outline: 2px solid var(--gold-deep);
+}
+
+.intro-flower svg{
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+@keyframes pulse-glow{
+  0%, 100% { filter: drop-shadow(0 0 6px rgba(244,180,0,.35)); transform: scale(1); }
+  50%      { filter: drop-shadow(0 0 22px rgba(244,180,0,.6)); transform: scale(1.045); }
+}
+
+.click-hint{
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-family: "Playfair Display", serif;
+  font-style: italic;
+  font-size: clamp(.95rem, 2vw, 1.15rem);
+  color: var(--ink-soft);
+}
+
+.click-line{
+  width: 34px;
+  height: 1px;
+  background: var(--ink-soft);
+  position: relative;
+}
+.click-line::after{
+  content: "";
+  position: absolute;
+  left: -3px; top: -3px;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--ink-soft);
+}
+
+.intro-sub{
+  margin: 0;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  font-size: .78rem;
+  color: var(--ink-soft);
+  font-family: "Playfair Display", serif;
+}
+
+/* ---------------------------------------------------------- main stage */
+.stage{
+  position: relative;
+  z-index: 1;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 4vw, 3rem);
+  padding: clamp(1.5rem, 5vw, 4rem);
+  opacity: 0;
+  animation: stage-in .9s ease forwards;
+  animation-delay: .15s;
+}
+
+@keyframes stage-in{
+  from{ opacity: 0; }
+  to{ opacity: 1; }
+}
+
+.scene{
+  flex: 1 1 50%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-width: 0;
+}
+
+.scene svg{
+  width: 100%;
+  max-width: 620px;
+  height: auto;
+  overflow: visible;
+}
+
+.ground{
+  stroke: var(--line);
+  stroke-width: 2;
+}
+
+.trunk-path{
+  fill: var(--trunk);
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 1.6s cubic-bezier(.22,.8,.27,1);
+}
+.trunk-path.grown{
+  clip-path: inset(0% 0 0 0);
+}
+
+.branch{
+  fill: none;
+  stroke: var(--trunk-lt);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-dasharray: var(--len);
+  stroke-dashoffset: var(--len);
+  transition: stroke-dashoffset 1s ease-out;
+  transition-delay: var(--delay, 0s);
+}
+.branch.drawn{
+  stroke-dashoffset: 0;
+}
+
+.heart-flower{
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  transform: scale(0);
+  transition: opacity .5s ease, transform .5s cubic-bezier(.34,1.56,.64,1);
+  transition-delay: var(--delay, 0s);
+}
+.heart-flower.bloom{
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ---------------------------------------------------------- text panel */
+.text-panel{
+  flex: 1 1 50%;
+  min-width: 0;
+  max-width: 560px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity .8s ease, transform .8s ease;
+}
+.text-panel.visible{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.title{
+  margin: 0 0 1rem;
+  font-family: "Playfair Display", serif;
+  font-weight: 600;
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  line-height: 1.25;
+  min-height: 1.2em;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .8s ease, transform .8s ease;
+}
+.title.visible{ opacity: 1; transform: translateY(0); }
+
+.paragraph{
+  margin: 0 0 1.1rem;
+  font-size: clamp(1.05rem, 2.3vw, 1.35rem);
+  line-height: 1.65;
+  color: var(--ink-soft);
+  white-space: pre-line;
+  min-height: 3em;
+}
+
+.signoff{
+  margin: 0 0 1.4rem;
+  font-family: "Playfair Display", serif;
+  font-weight: 600;
+  font-size: clamp(1.15rem, 2.6vw, 1.5rem);
+  min-height: 1.4em;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .7s ease, transform .7s ease;
+}
+.signoff.visible{ opacity: 1; transform: translateY(0); }
+
+.cursive-line{
+  margin: 0 0 1.6rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--ink-soft);
+  font-family: "Dancing Script", cursive;
+  font-size: clamp(1.15rem, 2.8vw, 1.6rem);
+  color: var(--gold-deep);
+  min-height: 2.4em;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .8s ease, transform .8s ease;
+  transition-delay: .15s;
+}
+.cursive-line.visible{ opacity: 1; transform: translateY(0); }
+
+.typing::after{
+  content: "";
+  display: inline-block;
+  width: 2px;
+  height: .95em;
+  margin-left: 2px;
+  background: currentColor;
+  vertical-align: -.15em;
+  animation: blink 1s step-end infinite;
+}
+@keyframes blink{
+  0%, 100%{ opacity: 1; }
+  50%{ opacity: 0; }
+}
+
+/* ---------------------------------------------------------- music box */
+.music-box{
+  display: inline-flex;
+  align-items: center;
+  gap: .7rem;
+  padding: .55rem 1rem .55rem .6rem;
+  border-radius: 999px;
+  background: rgba(244,180,0,.12);
+  border: 1px solid rgba(244,180,0,.35);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.music-box.visible{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.music-toggle{
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.bars{
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 14px;
+}
+.bars i{
+  display: block;
+  width: 3px;
+  background: var(--ink);
+  border-radius: 1px;
+  animation: eq 1s ease-in-out infinite;
+}
+.bars i:nth-child(1){ height: 40%; animation-delay: 0s; }
+.bars i:nth-child(2){ height: 100%; animation-delay: .15s; }
+.bars i:nth-child(3){ height: 60%; animation-delay: .3s; }
+.bars i:nth-child(4){ height: 80%; animation-delay: .45s; }
+
+.music-box.paused .bars i{ animation-play-state: paused; height: 30% !important; }
+
+@keyframes eq{
+  0%, 100%{ transform: scaleY(.4); }
+  50%{ transform: scaleY(1); }
+}
+
+.music-meta{
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+.music-title{
+  font-family: "Playfair Display", serif;
+  font-size: .9rem;
+}
+.music-artist{
+  font-size: .78rem;
+  color: var(--ink-soft);
+}
+
+/* ---------------------------------------------------------- replay */
+.replay-btn{
+  display: block;
+  margin-top: 1.8rem;
+  padding: .6rem 1.3rem;
+  border-radius: 999px;
+  border: 1px solid var(--ink-soft);
+  font-family: "Playfair Display", serif;
+  font-size: .9rem;
+  opacity: 0;
+  transition: opacity .6s ease, background .2s ease;
+}
+.replay-btn.visible{ opacity: 1; }
+.replay-btn:hover{ background: rgba(244,180,0,.15); }
+
+/* ---------------------------------------------------------- responsive */
+@media (max-width: 780px){
+  .stage{
+    flex-direction: column-reverse;
+    justify-content: flex-start;
+    padding: 1.25rem 1.25rem 3rem;
+    gap: 1rem;
+  }
+  .scene, .text-panel{
+    flex: none;
+    width: 100%;
+    max-width: 100%;
+  }
+  .scene svg{ max-width: 380px; }
+  .text-panel{ text-align: left; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .petal, .intro-flower, .bars i{ animation: none !important; }
+  .trunk-path, .branch, .heart-flower, .text-panel, .music-box, .replay-btn{
+    transition-duration: .01ms !important;
+  }
+}
