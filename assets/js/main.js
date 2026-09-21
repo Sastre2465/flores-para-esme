@@ -171,6 +171,39 @@
     return points;
   }
 
+  // punto sobre una curva de Bézier cuadrática (misma curva que dibuja la rama)
+  function quadBezier(p0, p1, p2, t) {
+    const mt = 1 - t;
+    return mt * mt * p0 + 2 * mt * t * p1 + t * t * p2;
+  }
+
+  // flores repartidas a lo largo de TODA la rama (no solo en la punta), para
+  // que quede completamente cubierta, sin tramos pelados. Se acumulan más
+  // flores y con más dispersión cerca de la punta, como un ramillete real.
+  function branchFlowerPoints(branch, bi) {
+    const points = [];
+    const steps = 9;
+    for (let s = 0; s <= steps; s++) {
+      const t = 0.2 + (s / steps) * 0.8;
+      const bx = quadBezier(branch.from[0], branch.cp[0], branch.to[0], t);
+      const by = quadBezier(branch.from[1], branch.cp[1], branch.to[1], t);
+      const count = t > 0.7 ? 3 : 1;
+      const jitterR = 7 + t * 15;
+      for (let k = 0; k < count; k++) {
+        const a = Math.random() * Math.PI * 2;
+        const r = Math.random() * jitterR;
+        points.push({
+          x: bx + Math.cos(a) * r,
+          y: by + Math.sin(a) * r * 0.85,
+          kind: "branch",
+          branch: bi,
+          t,
+        });
+      }
+    }
+    return points;
+  }
+
   function buildHeart(group) {
     const defs = document.createElementNS(SVG_NS, "defs");
     const grad = document.createElementNS(SVG_NS, "radialGradient");
@@ -183,7 +216,7 @@
     group.appendChild(defs);
 
     // 1) relleno principal del corazón, en coordenadas "crudas" de la fórmula
-    const rawFill = heartFillPoints(260, 0.55);
+    const rawFill = heartFillPoints(300, 0.55);
     const SCALE = 9.4;
     const scaledFill = rawFill.map((p) => ({
       x: p.x * SCALE,
@@ -204,48 +237,36 @@
       kind: "fill",
     }));
 
-    // 2) racimos pequeños justo en la punta de cada rama, para que
-    //    ninguna quede "pelada" — el árbol se llena por completo.
-    const tipFlowers = [];
+    // 2) flores a lo largo de cada rama completa (base → punta), para que
+    //    el árbol entero quede cubierto y se una con el corazón de arriba.
+    const branchFlowers = [];
     BRANCHES.forEach((b, bi) => {
-      const [tx, ty] = b.to;
-      const clusterSize = 6;
-      for (let i = 0; i < clusterSize; i++) {
-        const a = Math.random() * Math.PI * 2;
-        const r = Math.random() * 22;
-        tipFlowers.push({
-          x: tx + Math.cos(a) * r,
-          y: ty + Math.sin(a) * r * 0.8,
-          kind: "tip",
-          branch: bi,
-        });
-      }
+      branchFlowers.push(...branchFlowerPoints(b, bi));
     });
 
-    const flowers = [...tipFlowers, ...fillFlowers];
+    const flowers = [...branchFlowers, ...fillFlowers];
 
-    // orden de aparición: las puntas de las ramas abren casi de inmediato
-    // (siguiendo el orden en que cada rama terminó de dibujarse) y el
-    // relleno del corazón florece después, en oleada desde el tronco
-    // hacia arriba.
+    // orden de aparición: cada rama florece de la base hacia la punta,
+    // siguiendo su propio despliegue, y el corazón florece después,
+    // en oleada desde el tronco hacia arriba.
     const maxDist = Math.max(
       ...fillFlowers.map((f) => Math.hypot(f.x - TRUNK_TOP.x, f.y - TRUNK_TOP.y))
     );
 
     flowers.forEach((f) => {
       let delay;
-      if (f.kind === "tip") {
-        delay = f.branch * 0.09 + 0.25 + Math.random() * 0.15;
+      if (f.kind === "branch") {
+        delay = f.branch * 0.09 + f.t * 0.55 + Math.random() * 0.12;
       } else {
         const dist = Math.hypot(f.x - TRUNK_TOP.x, f.y - TRUNK_TOP.y);
-        delay = 0.5 + (dist / maxDist) * 1.3 + Math.random() * 0.25;
+        delay = 0.55 + (dist / maxDist) * 1.3 + Math.random() * 0.25;
       }
 
       const g = document.createElementNS(SVG_NS, "g");
       g.classList.add("heart-flower");
       g.style.setProperty("--delay", `${delay.toFixed(2)}s`);
 
-      const r = (f.kind === "tip" ? 7 : 8) + Math.random() * 3;
+      const r = (f.kind === "branch" ? 7 : 8) + Math.random() * 3;
       const petal = document.createElementNS(SVG_NS, "circle");
       petal.setAttribute("cx", f.x.toFixed(1));
       petal.setAttribute("cy", f.y.toFixed(1));
@@ -297,9 +318,9 @@
   }
 
   /* ============================================================
-     6) Spotify — "Lover" (versión piano), embebido oficialmente
+     6) Spotify — "Amor" de Los Gemelos De Sinaloa, embebido oficialmente
      ============================================================ */
-  const SPOTIFY_TRACK_URI = "spotify:track:1vGG6k6R00jmYHnlLMvAOY";
+  const SPOTIFY_TRACK_URI = "spotify:track:0dJ8BG6MjGBX2RwJbJOVGV";
   let spotifyController = null;
 
   window.onSpotifyIframeApiReady = (IFrameAPI) => {
@@ -339,7 +360,7 @@
       "Elegí flores amarillas porque no hay color que se parezca más a ti: cálido, alegre, imposible de ignorar.\n\n" +
       "Cada girasol de este árbol es una razón distinta por la que sonrío cuando pienso en ti: tu risa, tu forma de ver el mundo, la manera en que conviertes un día cualquiera en uno especial.\n\n" +
       "Y aun así, por más que este árbol se llene de flores, ninguna alcanza a decir todo lo que siento.",
-    signoff: "— Te amo, Esme.",
+    signoff: "— Te quiero, Esme.",
     cursive: "Eres el sol que hace florecer cada uno de mis días.",
   };
 
@@ -394,7 +415,7 @@
       requestAnimationFrame(() => {
         flowers.forEach((f) => f.classList.add("bloom"));
       });
-      await wait(reduceMotion ? 200 : 2300);
+      await wait(reduceMotion ? 200 : 2600);
 
       // 5. panel de texto
       textPanel.classList.add("visible");
