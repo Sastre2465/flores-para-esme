@@ -1,7 +1,7 @@
 # 🌻 Para Esme
 
 Una página web interactiva de flores amarillas, hecha como regalo. Se hace clic
-en el girasol, crece un árbol, florece un corazón de girasoles y aparece un
+en el tulipán, crece un árbol, florece un corazón de tulipanes y aparece un
 mensaje escrito letra por letra, con música de fondo.
 
 **Ver la página en vivo:** se publica con GitHub Pages (link en la descripción
@@ -28,6 +28,6 @@ No requiere atribución, pero se deja aquí como referencia.
 
 ## Créditos
 
-Basada en la idea/animación de un video de referencia (girasol → árbol →
+Basada en la idea/animación de un video de referencia (tulipán → árbol →
 corazón de flores → mensaje), recreada desde cero en HTML, CSS y JavaScript
 puro (sin dependencias ni frameworks).

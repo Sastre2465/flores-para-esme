@@ -356,6 +356,17 @@ button{
   transform: scale(1);
 }
 
+/* balanceo suave de cada tulipán, como si lo moviera el viento */
+.tulip-sway{
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: tulip-sway var(--sway-dur, 4.5s) ease-in-out var(--sway-delay, 0s) infinite;
+}
+@keyframes tulip-sway{
+  0%, 100% { transform: rotate(var(--sway-a, -3deg)); }
+  50%      { transform: rotate(var(--sway-b, 3deg)); }
+}
+
 /* ---------------------------------------------------------- text panel */
 .text-panel{
   flex: 1 1 50%;
@@ -459,12 +470,12 @@ button{
   color: var(--ink-soft);
 }
 
-.spotify-embed{
+.music-embed{
   border-radius: 12px;
   overflow: hidden;
   line-height: 0;
 }
-.spotify-embed iframe{
+.music-embed iframe{
   display: block;
   border-radius: 12px;
 }
@@ -502,7 +513,7 @@ button{
 }
 
 @media (prefers-reduced-motion: reduce){
-  .petal, .intro-flower{ animation: none !important; }
+  .petal, .intro-flower, .tulip-sway{ animation: none !important; }
   .trunk-path, .branch, .heart-flower, .text-panel, .music-box, .replay-btn, .gate, .gate-card{
     transition-duration: .01ms !important;
   }

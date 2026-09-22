@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Para Esme 🌻</title>
-<meta name="description" content="Un jardín de flores amarillas para Esme.">
+<meta name="description" content="Un jardín de tulipanes amarillos para Esme.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🌻%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -58,8 +58,17 @@
     <p class="cursive-line" id="tpCursive"></p>
 
     <div class="music-box" id="musicBox">
-      <p class="music-label">🎵 Amor — Los Gemelos De Sinaloa</p>
-      <div id="spotifyEmbed" class="spotify-embed"></div>
+      <p class="music-label">🎵 Flores Amarillas — Floricienta</p>
+      <div class="music-embed">
+        <iframe
+          allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
+          frameborder="0"
+          height="150"
+          style="width:100%;overflow:hidden;border-radius:10px;"
+          sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+          src="https://embed.music.apple.com/us/album/floricienta/1677210184?i=1677210192"
+        ></iframe>
+      </div>
     </div>
 
     <button class="replay-btn" id="replayBtn" type="button" hidden>🔄 Volver a vivirlo</button>
@@ -77,6 +86,5 @@
 </main>
 
 <script src="assets/js/main.js"></script>
-<script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
 </body>
 </html>

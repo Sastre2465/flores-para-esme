@@ -32,7 +32,7 @@
         gate.classList.add("leaving");
         setTimeout(onSuccess, 700);
       } else {
-        error.textContent = "Esta flor solo se abre para Esme 🌻";
+        error.textContent = "";
         card.classList.remove("shake");
         void card.offsetWidth;
         card.classList.add("shake");
@@ -43,44 +43,93 @@
   }
 
   /* ============================================================
-     1) Flor principal (pantalla de inicio) — girasol dibujado en SVG
+     1) Tulipán en SVG — se reutiliza a distinto tamaño tanto en la
+        flor grande de inicio como en cada flor del árbol.
      ============================================================ */
+  function petalPath(len, halfW) {
+    return (
+      `M0,0 C ${(-halfW).toFixed(1)},${(-len * 0.32).toFixed(1)} ` +
+      `${(-halfW * 0.9).toFixed(1)},${(-len * 0.82).toFixed(1)} 0,${(-len).toFixed(1)} ` +
+      `C ${(halfW * 0.9).toFixed(1)},${(-len * 0.82).toFixed(1)} ` +
+      `${halfW.toFixed(1)},${(-len * 0.32).toFixed(1)} 0,0 Z`
+    );
+  }
+
+  // Tulipán hecho de 3 pétalos (dos traseros + uno frontal más claro) y
+  // una vena central sutil; el punto (0,0) es la base, de donde "crece".
+  function buildTulip({ len, halfW, front, back, vein, sepals = false }) {
+    const g = document.createElementNS(SVG_NS, "g");
+
+    if (sepals) {
+      [-1, 1].forEach((side) => {
+        const s = document.createElementNS(SVG_NS, "path");
+        s.setAttribute(
+          "d",
+          `M0,0 Q ${(side * halfW * 0.5).toFixed(1)},${(len * 0.12).toFixed(1)} ` +
+            `${(side * halfW * 1.05).toFixed(1)},${(len * 0.42).toFixed(1)} ` +
+            `Q ${(side * halfW * 0.3).toFixed(1)},${(len * 0.26).toFixed(1)} 0,0 Z`
+        );
+        s.setAttribute("fill", "#3d6b4a");
+        g.appendChild(s);
+      });
+    }
+
+    [-1, 1].forEach((side) => {
+      const p = document.createElementNS(SVG_NS, "path");
+      p.setAttribute("d", petalPath(len * 0.93, halfW * 0.96));
+      p.setAttribute("fill", back);
+      p.setAttribute("transform", `rotate(${side * 27})`);
+      g.appendChild(p);
+    });
+
+    const front1 = document.createElementNS(SVG_NS, "path");
+    front1.setAttribute("d", petalPath(len, halfW));
+    front1.setAttribute("fill", front);
+    g.appendChild(front1);
+
+    const veinLine = document.createElementNS(SVG_NS, "path");
+    veinLine.setAttribute("d", `M0,${(-len * 0.12).toFixed(1)} L0,${(-len * 0.86).toFixed(1)}`);
+    veinLine.setAttribute("stroke", vein);
+    veinLine.setAttribute("stroke-width", Math.max(0.6, len * 0.028).toFixed(2));
+    veinLine.setAttribute("stroke-linecap", "round");
+    veinLine.setAttribute("fill", "none");
+    veinLine.setAttribute("opacity", "0.4");
+    g.appendChild(veinLine);
+
+    return g;
+  }
+
+  // pequeñas variaciones de tono para que el corazón no se vea plano,
+  // como un ramillete real de tulipanes amarillos.
+  const TULIP_SHADES = [
+    { front: "#ffe08a", back: "#f0b300" },
+    { front: "#ffd766", back: "#e8a800" },
+    { front: "#f7c948", back: "#d98c0b" },
+  ];
+
   function buildHeroFlower(svg) {
-    const petalCount = 16;
-    const group = document.createElementNS(SVG_NS, "g");
+    const wrap = document.createElementNS(SVG_NS, "g");
+    wrap.setAttribute("transform", "translate(0, 18)");
 
-    for (let i = 0; i < petalCount; i++) {
-      const angle = (360 / petalCount) * i;
-      const petal = document.createElementNS(SVG_NS, "ellipse");
-      petal.setAttribute("cx", "0");
-      petal.setAttribute("cy", "-32");
-      petal.setAttribute("rx", "10");
-      petal.setAttribute("ry", "24");
-      petal.setAttribute("fill", i % 2 === 0 ? "#f4b400" : "#e6a400");
-      petal.setAttribute("transform", `rotate(${angle})`);
-      group.appendChild(petal);
-    }
+    const sway = document.createElementNS(SVG_NS, "g");
+    sway.classList.add("tulip-sway");
+    sway.style.setProperty("--sway-a", "-3deg");
+    sway.style.setProperty("--sway-b", "3deg");
+    sway.style.setProperty("--sway-dur", "4.5s");
 
-    const center = document.createElementNS(SVG_NS, "circle");
-    center.setAttribute("cx", "0");
-    center.setAttribute("cy", "0");
-    center.setAttribute("r", "16");
-    center.setAttribute("fill", "#6b3f1d");
-    group.appendChild(center);
+    sway.appendChild(
+      buildTulip({
+        len: 62,
+        halfW: 26,
+        front: "#ffd766",
+        back: "#d98c0b",
+        vein: "#8a5a06",
+        sepals: true,
+      })
+    );
 
-    // textura de puntitos en el centro
-    for (let i = 0; i < 14; i++) {
-      const t = Math.random() * Math.PI * 2;
-      const r = Math.random() * 11;
-      const dot = document.createElementNS(SVG_NS, "circle");
-      dot.setAttribute("cx", (Math.cos(t) * r).toFixed(1));
-      dot.setAttribute("cy", (Math.sin(t) * r).toFixed(1));
-      dot.setAttribute("r", "1.1");
-      dot.setAttribute("fill", "#3f2410");
-      group.appendChild(dot);
-    }
-
-    svg.appendChild(group);
+    wrap.appendChild(sway);
+    svg.appendChild(wrap);
   }
 
   /* ============================================================
@@ -152,21 +201,53 @@
     return { x, y: -y }; // se invierte porque en SVG "y" crece hacia abajo
   }
 
-  // La curva del corazón es "estrellada" respecto al origen (todo rayo desde
-  // el centro la cruza una sola vez), así que basta escalar cada punto del
-  // contorno por un radio aleatorio para rellenar el área sin dejar
-  // "rayos" visibles, con densidad uniforme (sqrt para repartir por área).
-  function heartFillPoints(count, jitter) {
+  function heartPolygonPoints(steps = 240) {
+    const poly = [];
+    for (let i = 0; i < steps; i++) {
+      poly.push(heartPoint((i / steps) * Math.PI * 2));
+    }
+    return poly;
+  }
+
+  function pointInHeart(x, y, poly) {
+    let inside = false;
+    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+      const xi = poly[i].x, yi = poly[i].y;
+      const xj = poly[j].x, yj = poly[j].y;
+      const intersect =
+        yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
+      if (intersect) inside = !inside;
+    }
+    return inside;
+  }
+
+  // Rejilla hexagonal que cubre el corazón por completo, sin huecos: cada
+  // flor se solapa levemente con sus vecinas (como en la referencia), en
+  // vez de puntos al azar que dejan claros entre unas y otras.
+  function heartFillPoints(spacing, jitter) {
+    const poly = heartPolygonPoints();
+    const minX = Math.min(...poly.map((p) => p.x));
+    const maxX = Math.max(...poly.map((p) => p.x));
+    const minY = Math.min(...poly.map((p) => p.y));
+    const maxY = Math.max(...poly.map((p) => p.y));
+
+    const rowH = spacing * 0.87;
     const points = [];
-    for (let i = 0; i < count; i++) {
-      const t = Math.random() * Math.PI * 2;
-      const r = Math.sqrt(Math.random());
-      const p = heartPoint(t);
-      points.push({
-        x: p.x * r + (Math.random() - 0.5) * jitter,
-        y: p.y * r + (Math.random() - 0.5) * jitter,
-        kind: "fill",
-      });
+    let row = 0;
+    for (let y = minY - rowH; y <= maxY + rowH; y += rowH) {
+      const xOffset = row % 2 === 0 ? 0 : spacing / 2;
+      for (let x = minX - spacing; x <= maxX + spacing; x += spacing) {
+        const px = x + xOffset;
+        // un pelín "hacia dentro" para que el borde también quede tupido
+        if (pointInHeart(px, y, poly) || pointInHeart(px, y - rowH * 0.4, poly)) {
+          points.push({
+            x: px + (Math.random() - 0.5) * jitter,
+            y: y + (Math.random() - 0.5) * jitter,
+            kind: "fill",
+          });
+        }
+      }
+      row++;
     }
     return points;
   }
@@ -205,18 +286,8 @@
   }
 
   function buildHeart(group) {
-    const defs = document.createElementNS(SVG_NS, "defs");
-    const grad = document.createElementNS(SVG_NS, "radialGradient");
-    grad.setAttribute("id", "petalGrad");
-    grad.innerHTML =
-      '<stop offset="0%" stop-color="#ffe08a"/>' +
-      '<stop offset="65%" stop-color="#f4b400"/>' +
-      '<stop offset="100%" stop-color="#d98c0b"/>';
-    defs.appendChild(grad);
-    group.appendChild(defs);
-
     // 1) relleno principal del corazón, en coordenadas "crudas" de la fórmula
-    const rawFill = heartFillPoints(300, 0.55);
+    const rawFill = heartFillPoints(1.22, 0.2);
     const SCALE = 9.4;
     const scaledFill = rawFill.map((p) => ({
       x: p.x * SCALE,
@@ -266,21 +337,34 @@
       g.classList.add("heart-flower");
       g.style.setProperty("--delay", `${delay.toFixed(2)}s`);
 
-      const r = (f.kind === "branch" ? 7 : 8) + Math.random() * 3;
-      const petal = document.createElementNS(SVG_NS, "circle");
-      petal.setAttribute("cx", f.x.toFixed(1));
-      petal.setAttribute("cy", f.y.toFixed(1));
-      petal.setAttribute("r", r.toFixed(1));
-      petal.setAttribute("fill", "url(#petalGrad)");
-      g.appendChild(petal);
+      // grupo de posición (traslada al punto f.x,f.y) separado del grupo de
+      // bloom (que anima "transform" por CSS), para que no se pisen entre sí
+      const pos = document.createElementNS(SVG_NS, "g");
+      pos.setAttribute("transform", `translate(${f.x.toFixed(1)}, ${f.y.toFixed(1)})`);
 
-      const center = document.createElementNS(SVG_NS, "circle");
-      center.setAttribute("cx", f.x.toFixed(1));
-      center.setAttribute("cy", f.y.toFixed(1));
-      center.setAttribute("r", (r * 0.32).toFixed(1));
-      center.setAttribute("fill", "#5b3115");
-      g.appendChild(center);
+      const sway = document.createElementNS(SVG_NS, "g");
+      sway.classList.add("tulip-sway");
+      const tilt = (Math.random() - 0.5) * 26;
+      const swayAmp = 2.5 + Math.random() * 2.5;
+      sway.style.setProperty("--sway-a", `${(tilt - swayAmp).toFixed(1)}deg`);
+      sway.style.setProperty("--sway-b", `${(tilt + swayAmp).toFixed(1)}deg`);
+      sway.style.setProperty("--sway-dur", `${(3.4 + Math.random() * 2.4).toFixed(2)}s`);
+      sway.style.setProperty("--sway-delay", `-${(Math.random() * 4).toFixed(2)}s`);
 
+      const len = (f.kind === "branch" ? 11 : 13) + Math.random() * 5;
+      const shade = TULIP_SHADES[(Math.random() * TULIP_SHADES.length) | 0];
+      sway.appendChild(
+        buildTulip({
+          len,
+          halfW: len * 0.42,
+          front: shade.front,
+          back: shade.back,
+          vein: "#8a5a06",
+        })
+      );
+
+      pos.appendChild(sway);
+      g.appendChild(pos);
       group.appendChild(g);
     });
 
@@ -318,37 +402,12 @@
   }
 
   /* ============================================================
-     6) Spotify — "Amor" de Los Gemelos De Sinaloa, embebido oficialmente
+     6) Apple Music — "Flores Amarillas" de Floricienta, embebido oficialmente.
+        El widget de Apple Music no expone una API de control como la de
+        Spotify: Esme le da play ella misma dentro del reproductor.
      ============================================================ */
-  const SPOTIFY_TRACK_URI = "spotify:track:0dJ8BG6MjGBX2RwJbJOVGV";
-  let spotifyController = null;
-
-  window.onSpotifyIframeApiReady = (IFrameAPI) => {
-    const element = document.getElementById("spotifyEmbed");
-    if (!element) return;
-    IFrameAPI.createController(
-      element,
-      { uri: SPOTIFY_TRACK_URI, width: "100%", height: "80" },
-      (controller) => {
-        spotifyController = controller;
-      }
-    );
-  };
-
-  function playMusic() {
-    try {
-      spotifyController && spotifyController.play();
-    } catch (err) {
-      /* si la API todavía no cargó, Esme puede darle play en el reproductor */
-    }
-  }
-
+  function playMusic() {}
   function stopMusic() {
-    try {
-      spotifyController && spotifyController.pause();
-    } catch (err) {
-      /* noop */
-    }
   }
 
   /* ============================================================
@@ -358,7 +417,7 @@
     title: "🌻 Para ti, Esme 🌻",
     paragraph:
       "Elegí flores amarillas porque no hay color que se parezca más a ti: cálido, alegre, imposible de ignorar.\n\n" +
-      "Cada girasol de este árbol es una razón distinta por la que sonrío cuando pienso en ti: tu risa, tu forma de ver el mundo, la manera en que conviertes un día cualquiera en uno especial.\n\n" +
+      "Cada tulipán de este árbol es una razón distinta por la que sonrío cuando pienso en ti: tu risa, tu forma de ver el mundo, la manera en que conviertes un día cualquiera en uno especial.\n\n" +
       "Y aun así, por más que este árbol se llene de flores, ninguna alcanza a decir todo lo que siento.",
     signoff: "— Te quiero, Esme.",
     cursive: "Eres el sol que hace florecer cada uno de mis días.",
@@ -397,25 +456,25 @@
       requestAnimationFrame(() => intro.classList.add("leaving"));
       playMusic();
 
-      await wait(500);
+      await wait(350);
 
       // 2. crecer el tronco
       trunkPath.classList.add("grown");
-      await wait(reduceMotion ? 0 : 1500);
+      await wait(reduceMotion ? 0 : 1000);
 
       // 3. las ramas se despliegan (se dibujan + se abren)
       buildBranches(branchesGroup);
       requestAnimationFrame(() => {
         branchesGroup.querySelectorAll(".branch").forEach((b) => b.classList.add("drawn"));
       });
-      await wait(reduceMotion ? 0 : 1500);
+      await wait(reduceMotion ? 0 : 1000);
 
       // 4. el árbol se llena de flores hasta formar el corazón
       const flowers = buildHeart(heartGroup);
       requestAnimationFrame(() => {
         flowers.forEach((f) => f.classList.add("bloom"));
       });
-      await wait(reduceMotion ? 200 : 2600);
+      await wait(reduceMotion ? 200 : 1800);
 
       // 5. panel de texto
       textPanel.classList.add("visible");
@@ -425,10 +484,10 @@
         tpTitle.classList.add("visible");
         tpCursive.classList.add("visible");
       });
-      await wait(600);
+      await wait(400);
 
-      await typeText(tpParagraph, CONTENT.paragraph, 20);
-      await wait(250);
+      await typeText(tpParagraph, CONTENT.paragraph, 12);
+      await wait(200);
 
       tpSignoff.textContent = CONTENT.signoff;
       requestAnimationFrame(() => tpSignoff.classList.add("visible"));
