@@ -1,0 +1,7 @@
+La sección "Algo que también te gusta" ya trae una ilustración de una
+escaramuza a caballo. Si quieres usar una foto o imagen propia, colócala
+aquí con el nombre:
+
+    escaramuza.png
+
+(También funciona escaramuza.jpg, escaramuza.jpeg, escaramuza.webp o escaramuza.gif)

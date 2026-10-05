@@ -1,90 +1,318 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Para Esme 🌻</title>
-<meta name="description" content="Un jardín de tulipanes amarillos para Esme.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🌻%3C/text%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Para Esme 🌹</title>
+  <meta name="description" content="Un pequeño detalle hecho especialmente para Esme: flores rosas y rojas con un toque charro elegante en vino, negro y dorado.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400;1,9..144,600&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="locked">
 
-<div class="petal-field" id="petalField" aria-hidden="true"></div>
+  <!-- Degradados compartidos por todas las rosas SVG (rosa, rojo, pastel y vino) -->
+  <svg class="svg-defs" width="0" height="0" aria-hidden="true" focusable="false">
+    <defs>
+      <radialGradient id="roseOut-rosa" gradientUnits="userSpaceOnUse" cx="50" cy="50" r="48">
+        <stop offset="0%" stop-color="#a8395f"/><stop offset="55%" stop-color="#e8789a"/><stop offset="100%" stop-color="#ffc2d2"/>
+      </radialGradient>
+      <radialGradient id="roseMid-rosa" gradientUnits="userSpaceOnUse" cx="50" cy="50" r="36">
+        <stop offset="0%" stop-color="#b8406a"/><stop offset="100%" stop-color="#f7a6bd"/>
+      </radialGradient>
+      <radialGradient id="roseIn-rosa" gradientUnits="userSpaceOnUse" cx="48" cy="46" r="16">
+        <stop offset="0%" stop-color="#f29ab3"/><stop offset="100%" stop-color="#b8406a"/>
+      </radialGradient>
 
-<!-- ===== PUERTA DE ACCESO (solo para Esme) ===== -->
-<section class="gate" id="gate">
-  <form class="gate-card" id="gateForm" autocomplete="off">
-    <span class="gate-flower" aria-hidden="true">🌻</span>
-    <h2 class="gate-title">Esta flor solo se abre para una persona</h2>
-    <p class="gate-hint">Escribe tu nombre para entrar</p>
-    <input
-      class="gate-input"
-      id="gateInput"
-      type="text"
-      placeholder="Tu nombre..."
-      aria-label="Tu nombre"
-      autofocus
-    >
-    <button class="gate-submit" type="submit">Entrar</button>
-    <p class="gate-error" id="gateError" aria-live="polite"></p>
-  </form>
-</section>
+      <radialGradient id="roseOut-rojo" gradientUnits="userSpaceOnUse" cx="50" cy="50" r="48">
+        <stop offset="0%" stop-color="#6e0d24"/><stop offset="55%" stop-color="#cf2a44"/><stop offset="100%" stop-color="#ff8a8f"/>
+      </radialGradient>
+      <radialGradient id="roseMid-rojo" gradientUnits="userSpaceOnUse" cx="50" cy="50" r="36">
+        <stop offset="0%" stop-color="#7d1029"/><stop offset="100%" stop-color="#ec5562"/>
+      </radialGradient>
+      <radialGradient id="roseIn-rojo" gradientUnits="userSpaceOnUse" cx="48" cy="46" r="16">
+        <stop offset="0%" stop-color="#e2475a"/><stop offset="100%" stop-color="#7d1029"/>
+      </radialGradient>
 
-<!-- ===== PANTALLA DE INICIO ===== -->
-<section class="intro" id="intro" hidden>
-  <div class="intro-flower-wrap">
-    <div class="intro-flower" id="introFlower" role="button" tabindex="0" aria-label="Iniciar">
-      <svg id="heroFlowerSvg" viewBox="-60 -60 120 120"></svg>
-    </div>
-    <div class="click-hint">
-      <span class="click-line" aria-hidden="true"></span>
-      <span class="click-text">Click aquí</span>
+      <radialGradient id="roseOut-pastel" gradientUnits="userSpaceOnUse" cx="50" cy="50" r="48">
+        <stop offset="0%" stop-color="#d2849c"/><stop offset="55%" stop-color="#f7b8c8"/><stop offset="100%" stop-color="#fff0f4"/>
+      </radialGradient>
+      <radialGradient id="roseMid-pastel" gradientUnits="userSpaceOnUse" cx="50" cy="50" r="36">
+        <stop offset="0%" stop-color="#d98ea4"/><stop offset="100%" stop-color="#ffdce5"/>
+      </radialGradient>
+      <radialGradient id="roseIn-pastel" gradientUnits="userSpaceOnUse" cx="48" cy="46" r="16">
+        <stop offset="0%" stop-color="#ffd3de"/><stop offset="100%" stop-color="#d98ea4"/>
+      </radialGradient>
+
+      <radialGradient id="roseOut-vino" gradientUnits="userSpaceOnUse" cx="50" cy="50" r="48">
+        <stop offset="0%" stop-color="#3e0717"/><stop offset="55%" stop-color="#86183a"/><stop offset="100%" stop-color="#c4506e"/>
+      </radialGradient>
+      <radialGradient id="roseMid-vino" gradientUnits="userSpaceOnUse" cx="50" cy="50" r="36">
+        <stop offset="0%" stop-color="#4a0a1e"/><stop offset="100%" stop-color="#a8345a"/>
+      </radialGradient>
+      <radialGradient id="roseIn-vino" gradientUnits="userSpaceOnUse" cx="48" cy="46" r="16">
+        <stop offset="0%" stop-color="#9c2c4e"/><stop offset="100%" stop-color="#4a0a1e"/>
+      </radialGradient>
+
+      <radialGradient id="goldCenter" cx="45%" cy="40%" r="60%">
+        <stop offset="0%" stop-color="#fff1b8"/><stop offset="60%" stop-color="#e9b44c"/><stop offset="100%" stop-color="#b47a1e"/>
+      </radialGradient>
+      <radialGradient id="duskDisc" cx="50%" cy="62%" r="60%">
+        <stop offset="0%" stop-color="#fff0c4"/><stop offset="35%" stop-color="#f0c060"/><stop offset="70%" stop-color="#b2473f"/><stop offset="100%" stop-color="#4a1222"/>
+      </radialGradient>
+      <linearGradient id="skirtGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#e2475a"/><stop offset="100%" stop-color="#9c1834"/>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <!-- Cielo, estrellas y pétalos (fondo de toda la página) -->
+  <div class="sky" id="sky" aria-hidden="true"></div>
+  <div class="stars" id="stars" aria-hidden="true"></div>
+  <canvas id="petals" aria-hidden="true"></canvas>
+
+  <!-- El lienzo charro: ruedo de arena con su barda, y banderines arriba -->
+  <div class="arena" aria-hidden="true"></div>
+  <div class="banderines" id="banderines" aria-hidden="true"></div>
+
+  <!-- ============ PANTALLA DE ENTRADA ============ -->
+  <section class="gate" id="gate">
+    <div class="gate-glow" aria-hidden="true"></div>
+    <svg class="gate-hills" viewBox="0 0 1440 260" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 150 C 240 90 420 170 720 120 C 1000 70 1200 150 1440 110 L1440 260 L0 260 Z" fill="rgba(74,22,38,.75)"/>
+      <path d="M0 200 C 300 150 520 220 820 180 C 1080 145 1260 210 1440 185 L1440 260 L0 260 Z" fill="rgba(20,8,12,.92)"/>
+    </svg>
+
+    <form class="gate-card" id="gateForm" autocomplete="off" novalidate>
+      <div class="gate-flower" id="gateFlower" aria-hidden="true"></div>
+      <h1 class="gate-title">Tengo algo especial para ti <span class="wiggle">🌹</span></h1>
+      <label class="gate-label" for="nameInput">¿Cómo te llamas?</label>
+      <input class="gate-input" id="nameInput" type="text" placeholder="Escribe tu nombre" maxlength="40" spellcheck="false">
+      <button class="gate-btn" type="submit"><span>Entrar</span></button>
+      <p class="gate-msg" id="gateMsg" role="status" aria-live="polite"></p>
+    </form>
+  </section>
+
+  <!-- Transición: una pasada de escaramuzas al galope con un olán de su vestido -->
+  <div class="pasada" id="pasada" aria-hidden="true">
+    <div class="pasada-panel">
+      <p class="pasada-caption" id="pasadaCaption"></p>
+      <div class="pasada-riders" id="pasadaRiders"></div>
     </div>
   </div>
-  <p class="intro-sub">para Esme</p>
-</section>
 
-<!-- ===== ESCENA PRINCIPAL ===== -->
-<main class="stage" id="stage" hidden>
+  <!-- ============ PÁGINA PRINCIPAL ============ -->
+  <main id="main">
 
-  <section class="text-panel" id="textPanel">
-    <h1 class="title" id="tpTitle"></h1>
-    <p class="paragraph" id="tpParagraph"></p>
-    <p class="signoff" id="tpSignoff"></p>
-    <p class="cursive-line" id="tpCursive"></p>
+    <nav class="dots" aria-label="Secciones">
+      <a href="#inicio" class="active"><span>Inicio</span></a>
+      <a href="#jardin"><span>Un jardín para ti</span></a>
+      <a href="#mensaje"><span>Un pequeño mensaje</span></a>
+      <a href="#escaramuza"><span>Algo que también te gusta</span></a>
+      <a href="#final"><span>Para Esme</span></a>
+    </nav>
 
-    <div class="music-box" id="musicBox">
-      <p class="music-label">🎵 Flores Amarillas — Floricienta</p>
-      <div class="music-embed">
-        <iframe
-          allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
-          frameborder="0"
-          height="150"
-          style="width:100%;overflow:hidden;border-radius:10px;"
-          sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
-          src="https://embed.music.apple.com/us/album/floricienta/1677210184?i=1677210192"
-        ></iframe>
-      </div>
+    <!-- Controles para avanzar entre pantallas (la página ya no baja) -->
+    <div class="slide-nav">
+      <button class="sn-btn sn-prev" id="prevBtn" type="button" aria-label="Pantalla anterior">‹</button>
+      <span class="sn-count" id="slideCount">1 / 5</span>
+      <button class="sn-btn sn-next" id="nextBtn" type="button">Comenzar 🐎</button>
     </div>
 
-    <button class="replay-btn" id="replayBtn" type="button" hidden>🔄 Volver a vivirlo</button>
-  </section>
+    <!-- INICIO -->
+    <section id="inicio" class="hero" data-section>
+      <div class="hero-scene" aria-hidden="true">
+        <div class="hero-sun"></div>
+        <div class="hero-birds"><i></i><i></i><i></i></div>
+        <svg class="hills" viewBox="0 0 1440 360" preserveAspectRatio="none">
+          <path class="hill h1" d="M0 170 C 200 110 380 190 620 140 C 880 90 1100 170 1440 120 L1440 360 L0 360 Z"/>
+          <path class="hill h2" d="M0 230 C 260 180 500 260 760 215 C 1020 170 1220 240 1440 205 L1440 360 L0 360 Z"/>
+        </svg>
+        <!-- Una escaramuza galopa por el ruedo -->
+        <div class="hero-rider" id="heroRider"></div>
+        <svg class="hills hills-front" viewBox="0 0 1440 360" preserveAspectRatio="none">
+          <path class="hill h3" d="M0 290 C 320 250 560 310 860 280 C 1120 255 1300 300 1440 285 L1440 360 L0 360 Z"/>
+        </svg>
+        <div class="hero-flowers" id="heroFlowers"></div>
+      </div>
 
-  <section class="scene" id="scene" aria-hidden="true">
-    <svg id="treeSvg" viewBox="0 0 600 700" preserveAspectRatio="xMidYMax meet">
-      <line class="ground" x1="10" y1="650" x2="590" y2="650"></line>
-      <path id="trunkPath" class="trunk-path" d=""></path>
-      <g id="branchesGroup"></g>
-      <g id="heartGroup"></g>
-    </svg>
-  </section>
+      <div class="hero-text">
+        <p class="eyebrow">una página hecha solo para ti</p>
+        <h2 class="hero-title">
+          <span class="hero-hola">Hola,</span>
+          <span class="hero-name" id="heroName">Esme</span>
+        </h2>
+        <p class="hero-sub"><span id="typed"></span><span class="caret" aria-hidden="true"></span></p>
+      </div>
 
-</main>
+    </section>
 
-<script src="assets/js/main.js"></script>
+    <!-- UN JARDÍN PARA TI -->
+    <section id="jardin" class="garden" data-section>
+      <header class="section-head reveal">
+        <span class="kicker">— la flor —</span>
+        <h2>Un jardín para ti <span class="emoji">🌹</span></h2>
+        <p>Toca las flores… cada una guarda algo.</p>
+      </header>
+
+      <div class="meadow" id="meadow">
+        <div class="fireflies" id="fireflies" aria-hidden="true"></div>
+        <div class="flower-note" id="flowerNote" role="status" aria-live="polite"></div>
+        <div class="ground" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- UN PEQUEÑO MENSAJE -->
+    <section id="mensaje" class="message" data-section>
+      <header class="section-head reveal">
+        <span class="kicker">— el abanico —</span>
+        <h2>Un pequeño mensaje <span class="emoji">❤️</span></h2>
+      </header>
+
+      <!-- Cinemática: un sobre lacrado que se abre y deja salir la carta -->
+      <div class="envelope-scene reveal" id="envScene">
+        <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Abrir la carta para Esme">
+          <div class="env-back"></div>
+          <div class="env-paper" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+          <div class="env-front" aria-hidden="true">
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none"><polyline points="0,0 50,58 100,0"/></svg>
+          </div>
+          <div class="env-flap" aria-hidden="true">
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none"><polyline points="0,0 50,100 100,0"/></svg>
+          </div>
+          <div class="env-seal" id="envSeal" aria-hidden="true"></div>
+        </div>
+        <p class="env-hint">Toca el sello para abrir tu carta 💌</p>
+      </div>
+
+      <article class="letter is-sealed" id="letter">
+        <div class="letter-tape" aria-hidden="true"></div>
+        <div class="letter-flower" aria-hidden="true" id="letterFlower"></div>
+
+        <p class="letter-hello line">Para Esme:</p>
+
+        <p class="line">
+          Esme, sabes que entre nosotros siempre ha existido algo especial, y aunque las cosas
+          no terminaron siendo exactamente como alguna vez pensamos, eso no cambia lo importante
+          que eres para mí. ❤️
+        </p>
+
+        <p class="line">
+          Hemos compartido momentos, palabras y sentimientos que hicieron que te convirtieras
+          en alguien muy especial en mi vida. Por eso quise hacerte este pequeño detalle,
+          pensando en ti, en tus flores, en la escaramuza y en esas cosas que te hacen ser tú. 🌹🐎
+        </p>
+
+        <p class="line">
+          Tal vez no siempre te lo digo, pero <strong>te quiero mucho y siempre vas a tener
+          un lugar muy bonito para mí.</strong> Espero que esto te saque una sonrisa,
+          porque esa era justamente la intención. ❤️🌹
+        </p>
+
+        <p class="letter-sign line">Con mucho cariño <span>🌹</span></p>
+
+        <p class="letter-skip" id="letterSkip">toca la carta para leerla completa</p>
+      </article>
+    </section>
+
+    <!-- ALGO QUE TAMBIÉN TE GUSTA -->
+    <section id="escaramuza" class="escaramuza" data-section>
+      <header class="section-head light reveal">
+        <span class="kicker">— las puntas al frente —</span>
+        <h2>Algo que también te gusta <span class="emoji">🐎🌹</span></h2>
+      </header>
+
+      <div class="esc-wrap reveal">
+        <div class="esc-stage">
+          <div class="esc-frame" id="escFrame" role="button" tabindex="0" aria-label="Saluda a la escaramuza">
+            <img id="escImg" alt="Escaramuza montando a caballo saludando a Esme" draggable="false">
+            <div class="esc-fallback" id="escFallback" aria-hidden="true"></div>
+          </div>
+          <div class="esc-bubble" id="escBubble">¡Hola, Esme! 👋</div>
+        </div>
+
+        <div class="esc-card">
+          <!-- Credencial: entra girando, recibe su sello y se voltea al tocarla -->
+          <div class="cred" id="cred" role="button" tabindex="0" aria-label="Credencial de escaramuza de Esme. Toca para voltearla">
+            <div class="cred-inner" id="credInner">
+              <div class="cred-face cred-front">
+                <div class="cred-top">
+                  <span>Credencial oficial</span>
+                  <span>Nº 001</span>
+                </div>
+                <div class="cred-body">
+                  <div class="cred-photo" id="credPhoto"></div>
+                  <div class="cred-id">
+                    <p class="cred-kicker">Escaramuza de corazón</p>
+                    <h3>Esme</h3>
+                    <p class="cred-meta">Siempre en las puntas 🐎 · Rosas y rojas 🌹</p>
+                  </div>
+                </div>
+                <div class="cred-foot">
+                  <span class="cred-chip" aria-hidden="true"></span>
+                  <span class="cred-hint">toca para voltear ↻</span>
+                </div>
+                <div class="cred-shine" aria-hidden="true"></div>
+                <div class="cred-stamp" aria-hidden="true">Aprobada<small>escaramuza</small></div>
+              </div>
+              <div class="cred-face cred-back">
+                <p class="cred-back-title">Datos de la jinete</p>
+                <dl class="esc-data">
+                  <div><dt>Pasión</dt><dd>Escaramuza 🐎</dd></div>
+                  <div><dt>Posición</dt><dd>Las puntas ✨</dd></div>
+                  <div><dt>Flores favoritas</dt><dd>Rosas y rojas 🌹</dd></div>
+                  <div><dt>Figura favorita</dt><dd>La flor 🌸</dd></div>
+                </dl>
+                <p class="cred-sign">Firma <span>Esme</span></p>
+              </div>
+            </div>
+          </div>
+
+          <p class="esc-text">
+            Porque sé que la escaramuza es parte de ti, esta jinete vino a saludarte
+            y a recordarte que, igual que las puntas que abren la rutina, tú también
+            vas al frente con elegancia, valor y mucho corazón.
+          </p>
+          <button class="esc-btn" id="escBtn" type="button">¡Que viva la escaramuza! 🐎🌹</button>
+        </div>
+      </div>
+
+      <div class="ribbon" aria-hidden="true">
+        <div class="ribbon-track" id="ribbonTrack"></div>
+      </div>
+    </section>
+
+    <!-- PARA ESME -->
+    <section id="final" class="finale" data-section>
+      <div class="finale-scene" aria-hidden="true">
+        <div class="finale-sun" id="finaleSun"></div>
+        <div class="sea"></div>
+        <svg class="shore" viewBox="0 0 1440 200" preserveAspectRatio="none">
+          <path d="M0 90 C 180 40 360 110 520 150 L520 200 L0 200 Z"/>
+          <path d="M1440 70 C 1260 30 1080 100 930 150 L930 200 L1440 200 Z"/>
+        </svg>
+        <!-- La escaramuza mira el atardecer desde la orilla, entre rosas -->
+        <div class="finale-rider" id="finaleRider"></div>
+        <div class="shore-flowers left" id="shoreLeft"></div>
+        <div class="shore-flowers right" id="shoreRight"></div>
+      </div>
+
+      <div class="finale-text reveal">
+        <span class="kicker">— la rayada final —</span>
+        <h2>Para Esme <span class="emoji">🌅</span></h2>
+        <p>
+          Que cada atardecer te recuerde que hay alguien
+          que te aprecia mucho y que se alegra de conocerte.
+        </p>
+        <button class="finale-btn" id="finalBtn" type="button">Un último detalle 🌹</button>
+        <p class="finale-extra" id="finaleExtra">Gracias por ser tú, Esme. Este atardecer también es tuyo. 🌹</p>
+      </div>
+
+      <footer class="footer">Hecho con cariño, pensando en ti · 🌹</footer>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
 </body>
 </html>

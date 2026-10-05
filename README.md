@@ -1,33 +1,39 @@
-# 🌻 Para Esme
+# 🌹 Para Esme
 
-Una página web interactiva de flores amarillas, hecha como regalo. Se hace clic
-en el tulipán, crece un árbol, florece un corazón de tulipanes y aparece un
-mensaje escrito letra por letra, con música de fondo.
+Un pequeño detalle hecho especialmente para Esme, con temática de
+**escaramuza en el lienzo charro**: ruedo de arena con su barda blanca y roja,
+banderines rosas, rojos y blancos, rosas rosas y rojas y escaramuzas con su
+vestido de olanes. Es la versión de Esme de la página de Andrea, con las mismas
+secciones y el mismo recorrido.
 
-**Ver la página en vivo:** se publica con GitHub Pages (link en la descripción
-del repositorio una vez activado).
+## Cómo se recorre
 
-## Cómo funciona
+La página **no baja con scroll**: cada sección es una pantalla (una «vuelta»).
+Se avanza con el botón **Siguiente 🐎**, los puntitos de la derecha, deslizando
+el dedo, la rueda del mouse o las flechas del teclado.
 
-- `index.html` — estructura de la página.
-- `assets/css/style.css` — estilos, animaciones y diseño responsivo.
-- `assets/js/main.js` — la secuencia interactiva: crecimiento del árbol,
-  corazón de flores generado con una fórmula paramétrica, efecto de máquina
-  de escribir y control de la música.
-- `assets/audio/` — pista de fondo.
+Entre pantalla y pantalla cruza una **pasada de escaramuzas** al galope que
+arrastra un olán de su vestido y anuncia la siguiente figura de la rutina:
+**la entrada**, **la flor**, **el abanico**, **las puntas al frente** y
+**la rayada final**.
 
-Para personalizar el mensaje o el nombre, edita el objeto `CONTENT` al final
-de `assets/js/main.js`.
+1. **Entrada**: pregunta «¿Cómo te llamas?» y solo se abre con **Esme**
+   (sin importar mayúsculas, minúsculas ni acentos).
+2. **Inicio**: «Hola, Esme», con el sol detrás de la barda y una escaramuza
+   galopando por el ruedo.
+3. **Un jardín para ti**: rosas que guardan frases al tocarlas.
+4. **Un pequeño mensaje**: un sobre lacrado; al tocar el sello se abre, la
+   carta se despliega y se escribe letra por letra (tocarla la muestra completa).
+5. **Algo que también te gusta**: la escaramuza y su **credencial oficial**,
+   que entra girando, recibe un sello de «Aprobada» y se voltea al tocarla.
+6. **Para Esme**: el gran final al atardecer, con la escaramuza entre rosas y
+   el botón «Un último detalle 🌹».
 
-## Música
+## Archivos
 
-*Romantic Pieces* (mov. I), de Antonín Dvořák — interpretación de dominio
-público / **CC0** obtenida de [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Dvo%C5%99%C3%A1k_-_Romantic_Pieces_-_I.ogg),
-originalmente publicada en [archive.org](https://archive.org/details/Dvorak_RegentHall_1-3-2013).
-No requiere atribución, pero se deja aquí como referencia.
-
-## Créditos
-
-Basada en la idea/animación de un video de referencia (tulipán → árbol →
-corazón de flores → mensaje), recreada desde cero en HTML, CSS y JavaScript
-puro (sin dependencias ni frameworks).
+- `index.html`: estructura y textos (la carta está en la sección `mensaje`).
+- `style.css`: colores, animaciones y diseño responsivo.
+- `script.js`: rosas, escaramuzas, banderines, pétalos, frases del jardín, la
+  entrada y el cambio entre pantallas.
+- `imagenes/`: si se coloca aquí `escaramuza.png` (o .jpg, .webp, .gif), se
+  usa en la sección de la escaramuza en lugar de la ilustración incluida.
