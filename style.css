@@ -1841,17 +1841,37 @@ section { position: relative; }
   50% { box-shadow: 0 0 0 12px rgba(230, 198, 110, .12), 0 0 60px rgba(201, 162, 74, .8); }
 }
 
-.finale-extra {
-  font-family: var(--font-hand) !important;
-  font-style: normal !important;
-  font-size: clamp(1.7rem, 3.4vw, 2.3rem) !important;
-  color: #e6c66e;
+/* Mensaje de apoyo para su Nacional */
+.finale-support {
+  margin: 22px auto 0;
+  max-width: 560px;
+  padding: 16px 22px 18px;
+  background: rgba(58, 10, 28, .55);
+  border: 1px solid rgba(230, 198, 110, .55);
+  border-radius: 18px;
+  box-shadow: 0 10px 40px rgba(20, 4, 10, .45);
   opacity: 0;
   transform: translateY(14px);
   transition: opacity 1.2s ease .6s, transform 1.2s var(--ease-out) .6s;
 }
 
-.finale.bloomed .finale-extra { opacity: 1; transform: none; }
+.finale-text .finale-support p { margin: 0; max-width: none; }
+
+.finale-text .support-title {
+  font-family: var(--font-hand);
+  font-style: normal;
+  font-size: clamp(1.6rem, 3.2vw, 2.2rem);
+  line-height: 1.2;
+  color: #e6c66e;
+}
+
+.finale-text .support-text {
+  margin-top: 8px;
+  font-size: clamp(1rem, 1.8vw, 1.2rem);
+  line-height: 1.5;
+}
+
+.finale.bloomed .finale-support { opacity: 1; transform: none; }
 
 .footer {
   position: absolute;
